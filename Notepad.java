@@ -89,7 +89,6 @@ public class Notepad {
         ImageIcon icon = new ImageIcon(Notepad.class.getResource("icons/notepad.png"));
         frame.setIconImage(icon.getImage()); 
 
-        // Set custom title
         frame.setTitle("Version II");
 
         JPanel panel = new JPanel();
@@ -103,7 +102,6 @@ public class Notepad {
             }
         });
         
-      
 
         JButton btnOpen = new JButton("");
         btnOpen.setIcon(new ImageIcon(Notepad.class.getResource("icons/open.png")));
@@ -126,7 +124,6 @@ public class Notepad {
         JMenuBar menuBar = new JMenuBar();
         frame.setJMenuBar(menuBar);
     
-        // Create a File menu
         JMenu mnFile = new JMenu("File");
         menuBar.add(mnFile);
     
@@ -287,7 +284,6 @@ public class Notepad {
         });
         mnView.add(chckbxmntmStatusBar);
     
-        // Add the Save and Open buttons to the File menu
         mnFile.addSeparator();
         JMenuItem mntmSaveButton = new JMenuItem(new AbstractAction("Save", new ImageIcon(Notepad.class.getResource("icons/save.png"))) {
             public void actionPerformed(ActionEvent e) {
@@ -338,14 +334,12 @@ public class Notepad {
     statusBar.setBackground(Color.lightGray);
     frame.getContentPane().add(statusBar, BorderLayout.SOUTH);
 
-    // Add labels for line and column numbers
     JLabel lineLabel = new JLabel("Line: 1 ");
     statusBar.add(lineLabel,BorderLayout.WEST);
 
     JLabel columnLabel = new JLabel(" Column: 1");
     statusBar.add(columnLabel, BorderLayout.CENTER);
 
-    // Update status bar text when text area changes
     textArea.getDocument().addDocumentListener(new DocumentListener() {
         public void insertUpdate(DocumentEvent e) {
             updateStatusBar();
@@ -438,7 +432,7 @@ public class Notepad {
         if (result == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
             if (!selectedFile.getName().endsWith(".txt")) {
-                selectedFile = new File(selectedFile.getAbsolutePath() + ".txt");
+                selectedFile = new File(selectedFile.getAbsolutePath() + "");
             }
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(selectedFile))) {
                 writer.write(textArea.getText());
