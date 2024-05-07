@@ -424,15 +424,19 @@ public class Notepad {
             }
         }
     }
-
+    
     private void saveAsFile() {
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setFileFilter(new FileNameExtensionFilter("Text files", "txt"));
+        fileChooser.setFileFilter(new FileNameExtensionFilter("Text files", "txt", "html", "java", "py", "cpp", "js", "c", "cs", "php", "scala", "jsp", "asp", "xml", "css", "ts", "scss", "less"));
         int result = fileChooser.showSaveDialog(frame);
         if (result == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
-            if (!selectedFile.getName().endsWith(".txt")) {
-                selectedFile = new File(selectedFile.getAbsolutePath() + "");
+            String extension = getFileExtension(selectedFile);
+            if (extension == null) {
+                String fileType = detectFileType(textArea.getText());
+                if (fileType != null) {
+                    selectedFile = new File(selectedFile.getAbsolutePath() + "." + fileType);
+                }
             }
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(selectedFile))) {
                 writer.write(textArea.getText());
@@ -443,6 +447,73 @@ public class Notepad {
                 e.printStackTrace();
             }
         }
+    }
+    
+    private String getFileExtension(File file) {
+        String name = file.getName();
+        int lastIndexOfDot = name.lastIndexOf(".");
+        if (lastIndexOfDot != -1 && lastIndexOfDot != 0) {
+            return name.substring(lastIndexOfDot + 1);
+        }
+        return null;
+    }
+    
+    private String detectFileType(String text) {
+        if (text.contains("<html") || text.contains("<!DOCTYPE html")) {
+            return "html";
+        } else if (text.contains("public class") || text.contains("class ")) {
+            return "java";
+        } else if (text.contains("def ") || text.contains("import ") || text.contains("print ")) {
+            return "python";
+        } else if (text.contains("#include ")) {
+            return "cpp";
+        } else if (text.contains("function ") || text.contains("var ") || text.contains("console.log")) {
+            return "javascript";
+        } else if (text.contains("package ") || text.contains("import ")) {
+            return "java";
+        } else if (text.contains("printf") || text.contains("scanf")) {
+            return "c";
+        } else if (text.contains("class") && text.contains("{") && text.contains("}")) {
+            return "c#";
+        } else if (text.contains("<?php") || text.contains("<?")) {
+            return "php";
+        } else if (text.contains("println") || text.contains("class ") && text.contains("{")) {
+            return "scala";
+        } else if (text.contains("<!DOCTYPE html>")) {
+            return "html";
+        } else if (text.contains("<%") || text.contains("<%=")) {
+            return "jsp";
+        } else if (text.contains("<script") && text.contains("javascript")) {
+            return "javascript";
+        } else if (text.contains("<style") && text.contains("css")) {
+            return "css";
+        } else if (text.contains("<?php")) {
+            return "php";
+        } else if (text.contains("<%=")) {
+            return "asp";
+        } else if (text.contains("<%--")) {
+            return "xml";
+        } else if (text.contains("<%@")) {
+            return "asp";
+        } else if (text.contains("import ")) {
+            return "typescript";
+        } else if (text.contains("@import ") && text.contains("scss")) {
+            return "scss";
+        } else if (text.contains("@import ") && text.contains("less")) {
+            return "less";
+        }
+        return "txt";
+    }
+    
+    
+
+    private String getExtension(File file) {
+        String fileName = file.getName();
+        int index = fileName.lastIndexOf('.');
+        if (index > 0 && index < fileName.length() - 1) {
+            return fileName.substring(index + 1).toLowerCase();
+        }
+        return null;
     }
 
     private void print() {
