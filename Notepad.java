@@ -45,6 +45,12 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 
+import org.java_websocket.WebSocket;
+import org.java_websocket.handshake.ClientHandshake;
+import org.java_websocket.server.WebSocketServer;
+
+import java.net.InetSocketAddress;
+
 
 public class Notepad {
 
@@ -59,6 +65,7 @@ public class Notepad {
             public void run() {
                 try {
                     Notepad window = new Notepad();
+                    window.startWebSocketServer();
                     window.frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -118,6 +125,16 @@ public class Notepad {
 
         createMenuBar();
         createStatusBar();
+    }
+
+    void appendTextFromHTML(String text) {
+        textArea.append(text + " ");
+    }
+
+    private void startWebSocketServer() {
+        NotepadWebSocketServer server = new NotepadWebSocketServer(this, 8080);
+        server.start();
+        System.out.println("WebSocket server started on port 8080");
     }
 
     private void createMenuBar() {
